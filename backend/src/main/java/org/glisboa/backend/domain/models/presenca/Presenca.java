@@ -8,8 +8,7 @@ import lombok.Setter;
 import org.glisboa.backend.domain.models.ModeloEntidade;
 import org.glisboa.backend.domain.models.cadastro.Cadastro;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 
 @Entity
 @AllArgsConstructor
@@ -18,10 +17,7 @@ import java.time.LocalTime;
 public class Presenca extends ModeloEntidade {
 
     @Column(nullable = false)
-    private LocalDate data;
-
-    @Column(nullable = false)
-    private LocalTime time;
+    private LocalDateTime dataHoraRegistro;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "cadastro_id", nullable = false)
