@@ -8,8 +8,7 @@ import lombok.Getter;
 
 @MappedSuperclass
 @Getter
-public abstract class ModeloEntidade {
-
-    @Id @GeneratedValue(strategy = GenerationType.AUTO)
+public abstract class EntityModel {
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 }
