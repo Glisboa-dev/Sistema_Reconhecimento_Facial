@@ -12,7 +12,7 @@ import org.glisboa.backend.domain.models.record.Record;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "logs")
+@Table(name = "auditoria")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter @Setter

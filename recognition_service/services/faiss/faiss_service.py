@@ -7,7 +7,7 @@ class FaissService:
         self.index = fc.create_index()
         self.student_ids = []  # Mapping between embeddings and student IDs
 
-    def add_student(self, student_id: str, embeddings: list[np.ndarray]):
+    def add_student(self, student_id: int, embeddings: list[np.ndarray]):
         """
         Add student embeddings to the FAISS index.
         Each embedding must be a numpy array of shape (512,)
@@ -19,7 +19,7 @@ class FaissService:
     def recognize(self, query_embedding: np.ndarray, k: int = fc.TOP_K):
         """
         Recognize a face by comparing query embedding with the FAISS index.
-        query_embedding must be shape (512,)
+        query_embedding must be shape (512)
         """
         query_embedding = np.array([query_embedding], dtype=np.float32)
         D, I = self.index.search(query_embedding, k)

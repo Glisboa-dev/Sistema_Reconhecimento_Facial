@@ -16,7 +16,9 @@ class MinioService:
             img_array = np.frombuffer(data, np.uint8)
             img = cv2.imdecode(img_array, cv2.IMREAD_COLOR)
             if img is None:
-                raise ValueError(f"Failed to decode image {object_name} from bucket {bucket}")
+                raise ValueError(
+                    f"Failed to decode image {object_name} from bucket {bucket}"
+                )
             return img
         finally:
             response.close()

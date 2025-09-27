@@ -6,3 +6,5 @@ client = Minio(
     secret_key="minioadmin",
     secure=False
 )
+
+bucket_name = "students"

@@ -2,19 +2,21 @@ from deepface import DeepFace
 import numpy as np
 import cv2
 from config.deepFace import deep_face_config as dfc
-from services.minIO.minIo_service import load_image_from_minio
+from services.minIO.minIo_service import MinioService
 
 class DeepFaceService:
     def __init__(self, model_name=dfc.MODEL_NAME,
                  detector_backend=dfc.DETECTOR_BACKEND,
                  enforce_detection=dfc.ENFORCE_DETECTION,
                  augment_angles=dfc.AUGMENT_ANGLES,
-                 flip_horizontal=dfc.FLIP_HORIZONTAL):
+                 flip_horizontal=dfc.FLIP_HORIZONTAL,
+                 minio_service: MinioService = MinioService()):
         self.model_name = model_name
         self.detector_backend = detector_backend
         self.enforce_detection = enforce_detection
         self.augment_angles = augment_angles
         self.flip_horizontal = flip_horizontal
+        self.minio_service = minio_service
 
     def augment_face(self, img):
         """Perform rotation and optional horizontal flip for augmentation."""
@@ -49,5 +51,5 @@ class DeepFaceService:
 
     def get_embeddings_from_minio(self, bucket, object_name):
         """Retrieve image from MinIO and return embeddings."""
-        img = load_image_from_minio(bucket, object_name)
+        img = self.minio_service.load_image(bucket, object_name)
         return self.get_embeddings_from_image(img)

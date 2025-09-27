@@ -6,14 +6,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.glisboa.backend.domain.models.EntityModel;
+import org.glisboa.backend.domain.models.user.role.Role;
 
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Table(name = "usuario")
-@Getter @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@DiscriminatorColumn(name = "papel")
+@Getter @Setter
 public abstract class User extends EntityModel {
 
     @Column(unique = true, nullable = false, name = "username")
@@ -21,4 +20,8 @@ public abstract class User extends EntityModel {
 
     @Column(nullable = false, name = "senha")
     private String password;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, name = "papel")
+    private Role role;
 }

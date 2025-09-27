@@ -1,6 +1,6 @@
-package org.glisboa.backend.domain.models.user.employee.role;
+package org.glisboa.backend.domain.models.employee.post;
 
-public enum Role {
+public enum Post {
     PROFESSOR,
     COORDENADOR,
     DIRETOR,
