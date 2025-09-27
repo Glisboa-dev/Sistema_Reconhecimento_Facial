@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.glisboa.backend.domain.models.EntityModel;
 import org.glisboa.backend.domain.models.log.operationType.OperationType;
+import org.glisboa.backend.domain.models.presence.Presence;
 import org.glisboa.backend.domain.models.record.Record;
 
 import java.time.LocalDateTime;
@@ -36,6 +37,10 @@ public class Log extends EntityModel {
     @ManyToOne
     @JoinColumn(name = "id_cadastro", nullable = false)
     private Record record;
+
+    @ManyToOne
+    @JoinColumn(name = "id_presenca")
+    private Presence presence;
 
     @PrePersist
     protected void onCreate() {

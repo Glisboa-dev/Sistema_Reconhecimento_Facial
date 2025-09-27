@@ -25,7 +25,7 @@ public class Employee extends EntityModel {
     @Column(length = 20, name = "descricao")
     private String description;
 
-    @ManyToOne
-    @JoinColumn(name = "id_cadastro", nullable = false)
+    @OneToOne
+    @JoinColumn(name = "id_cadastro", nullable = false, unique = true)
     private Record record;
 }

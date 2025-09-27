@@ -6,5 +6,6 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface RecordRepository extends JpaRepository<Record, Integer> {
 
+  boolean existsByNameIgnoreCase(String name);
 }
 

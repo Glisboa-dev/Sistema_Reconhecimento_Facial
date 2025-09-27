@@ -37,14 +37,15 @@ public class Record extends EntityModel {
     private Type type; // ALUNO, FUNCIONARIO
 
     @OneToMany(mappedBy = "record", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Student> students;
-
-    @OneToMany(mappedBy = "record", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Employee> employees;
-
-    @OneToMany(mappedBy = "record", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Presence> presences;
 
     @OneToMany(mappedBy = "record", cascade = CascadeType.ALL)
     private List<Log> logs;
+
+    public Record(String name, Type type) {
+        super();
+        this.name = name;
+        this.type = type;
+        this.status = Status.ATIVO;
+    }
 }

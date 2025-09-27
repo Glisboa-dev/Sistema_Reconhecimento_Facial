@@ -16,8 +16,14 @@ public class Student extends EntityModel {
     @Column(nullable = false, name = "serie")
     private Grade grade;
 
-    @ManyToOne
-    @JoinColumn(name = "id_cadastro", nullable = false)
+    @OneToOne
+    @JoinColumn(name = "id_cadastro", nullable = false, unique = true)
     private Record record;
 
+    public Student(Integer studentId, Grade grade, Record record) {
+        super();
+        this.studentId = studentId;
+        this.grade = grade;
+        this.record = record;
+    }
 }
