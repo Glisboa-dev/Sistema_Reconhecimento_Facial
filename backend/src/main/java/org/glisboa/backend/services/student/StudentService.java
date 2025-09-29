@@ -5,4 +5,5 @@ import org.glisboa.backend.dto.student.CreateStudentDTO;
 
 public interface StudentService {
     void createStudent(CreateStudentDTO createStudentDTO, Record record);
+    void deleteStudentByRecordId(Integer recordId);
 }

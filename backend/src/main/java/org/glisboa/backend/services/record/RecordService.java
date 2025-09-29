@@ -1,7 +1,14 @@
 package org.glisboa.backend.services.record;
 
-import org.glisboa.backend.dto.record.CreateRecordDTO;
+import org.glisboa.backend.dto.employee.CreateEmployeeDTO;
+import org.glisboa.backend.dto.student.CreateStudentDTO;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface RecordService {
-     <T> void createRecord(CreateRecordDTO createRecordDTO, T createEntityDTO);
+    void createStudentRecord(String name, CreateStudentDTO createStudentDTO, MultipartFile file);
+    void createEmployeeRecord(String name, CreateEmployeeDTO createEmployeeDTO, MultipartFile file);
+    void deleteRecordById(Integer id);
+    void updateRecordName(Integer id, String newName);
+
+
 }

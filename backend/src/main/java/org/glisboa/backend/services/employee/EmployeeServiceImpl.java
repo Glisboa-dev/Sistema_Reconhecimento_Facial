@@ -14,4 +14,9 @@ public class EmployeeServiceImpl implements  EmployeeService {
     public void createEmployee(CreateEmployeeDTO createEmployeeDTO) {
 
     }
+
+    @Override
+    public void deleteEmployeeByRecordId(Integer recordId) {
+        employeeRepository.deleteByRecord_Id(recordId);
+    }
 }

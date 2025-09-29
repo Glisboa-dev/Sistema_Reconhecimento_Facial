@@ -22,8 +22,8 @@ public class MinIOServiceImpl implements MinIOService {
 
 
     @Override
-    public String uploadFile(MultipartFile file, String identifier) {
-        String objectName = generateObjectName(file.getOriginalFilename(), identifier);
+    public String uploadFile(MultipartFile file) {
+        String objectName = generateObjectName(file.getOriginalFilename());
         try(InputStream is = file.getInputStream()){
             minioClient.putObject(
                     PutObjectArgs.builder()
@@ -55,8 +55,8 @@ public class MinIOServiceImpl implements MinIOService {
     }
 
 
-    private String generateObjectName(String fileName, String identifier) {
-        return fileName + "_" + identifier + System.currentTimeMillis();
+    private String generateObjectName(String fileName) {
+        return fileName + System.currentTimeMillis();
     }
 
 }

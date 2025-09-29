@@ -20,6 +20,11 @@ public class StudentServiceImpl implements  StudentService {
         saveStudent(new Student(studentId, createStudentDTO.grade(), record));
     }
 
+    @Override
+    public void deleteStudentByRecordId(Integer recordId) {
+        studentRepository.deleteByRecord_Id(recordId);
+    }
+
     private void validateStudentId(Integer studentId) {
         if(studentRepository.existsByStudentId(studentId)) {
             throw new IllegalArgumentException("Matrícula já existe");
