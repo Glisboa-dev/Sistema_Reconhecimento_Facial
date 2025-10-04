@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.glisboa.backend.domain.models.EntityModel;
+import org.glisboa.backend.domain.models.record.Record;
 import org.glisboa.backend.domain.models.user.role.Role;
 
 @Entity
@@ -24,4 +25,8 @@ public abstract class User extends EntityModel {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, name = "papel")
     private Role role;
+
+    @OneToOne
+    @JoinColumn(name = "id_cadastro", nullable = false)
+    private Record record;
 }

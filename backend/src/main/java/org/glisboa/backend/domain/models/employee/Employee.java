@@ -1,6 +1,7 @@
 package org.glisboa.backend.domain.models.employee;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,4 +29,11 @@ public class Employee extends EntityModel {
     @OneToOne
     @JoinColumn(name = "id_cadastro", nullable = false, unique = true)
     private Record record;
+
+    public Employee(String cpf, Post post, String description) {
+        super();
+        this.cpf = cpf;
+        this.post = post;
+        this.description = description;
+    }
 }

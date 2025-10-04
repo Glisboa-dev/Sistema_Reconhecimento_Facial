@@ -1,7 +1,6 @@
 package org.glisboa.backend.services.presence;
 
 import lombok.AllArgsConstructor;
-import org.glisboa.backend.domain.models.presence.Presence;
 import org.glisboa.backend.domain.repositories.presence.PresenceRepository;
 import org.glisboa.backend.domain.repositories.record.RecordRepository;
 import org.springframework.stereotype.Service;
@@ -15,6 +14,6 @@ public class PresenceServiceImpl implements PresenceService{
     @Override
     public void registerPresence(Integer recordId) {
         var record = recordRepository.findById(recordId).orElseThrow();
- 
+
     }
 }

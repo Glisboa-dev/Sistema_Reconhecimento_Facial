@@ -5,6 +5,7 @@ import org.glisboa.backend.domain.models.record.Record;
 import org.glisboa.backend.domain.models.student.Student;
 import org.glisboa.backend.domain.repositories.student.StudentRepository;
 import org.glisboa.backend.dto.student.CreateStudentDTO;
+import org.glisboa.backend.exception.EntityAlreadyExistsException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,7 +16,7 @@ public class StudentServiceImpl implements  StudentService {
 
     @Override
     public void createStudent(CreateStudentDTO createStudentDTO, Record record) {
-        Integer studentId = createStudentDTO.studentId();
+        String studentId = createStudentDTO.studentId();
         validateStudentId(studentId);
         saveStudent(new Student(studentId, createStudentDTO.grade(), record));
     }
@@ -25,9 +26,9 @@ public class StudentServiceImpl implements  StudentService {
         studentRepository.deleteByRecord_Id(recordId);
     }
 
-    private void validateStudentId(Integer studentId) {
+    private void validateStudentId(String studentId) {
         if(studentRepository.existsByStudentId(studentId)) {
-            throw new IllegalArgumentException("Matrícula já existe");
+            throw new EntityAlreadyExistsException("Matrícula já existe");
         }
     }
 

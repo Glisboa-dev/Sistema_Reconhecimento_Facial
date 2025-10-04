@@ -1,5 +1,8 @@
 package org.glisboa.backend.controllers;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.glisboa.backend.dto.employee.CreateEmployeeDTO;
 import org.glisboa.backend.dto.student.CreateStudentDTO;
@@ -17,9 +20,9 @@ public class RecordController {
 
     @PostMapping(value = "/create-student", consumes = {"multipart/form-data"})
     public ResponseEntity<Void> createStudentRecord(
-            @RequestPart("name") String name,
-            @RequestPart("student") CreateStudentDTO createStudentDTO,
-            @RequestPart("file") MultipartFile file
+            @RequestPart("name") @Valid @NotBlank(message = "Nome é obrigatório") String name,
+            @RequestPart("student") @Valid CreateStudentDTO createStudentDTO,
+            @RequestPart("file")  MultipartFile file
     ) {
         recordService.createStudentRecord(name, createStudentDTO, file);
         return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -27,8 +30,8 @@ public class RecordController {
 
     @PostMapping(value = "/create-employee", consumes = {"multipart/form-data"})
     public ResponseEntity<Void> createEmployeeRecord(
-            @RequestPart("name") String name,
-            @RequestPart("employee") CreateEmployeeDTO createEmployeeDTO,
+            @RequestPart("name") @Valid @NotBlank(message = "Nome é obrigatório") String name,
+            @RequestPart("employee") @Valid CreateEmployeeDTO createEmployeeDTO,
             @RequestPart("file") MultipartFile file
     ) {
         recordService.createEmployeeRecord(name, createEmployeeDTO, file);

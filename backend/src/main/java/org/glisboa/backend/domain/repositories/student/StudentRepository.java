@@ -4,7 +4,7 @@ import org.glisboa.backend.domain.models.student.Student;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface StudentRepository extends JpaRepository<Student, Integer> {
-    boolean existsByStudentId(Integer studentId);
+    boolean existsByStudentId(String studentId);
 
     void deleteByRecord_Id(Integer recordId);
 }

@@ -14,7 +14,7 @@ import org.glisboa.backend.domain.models.student.grade.Grade;
 public class Student extends EntityModel {
 
     @Column(name = "matricula", nullable = false, unique = true)
-    private Integer studentId;
+    private String studentId;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, name = "serie")
