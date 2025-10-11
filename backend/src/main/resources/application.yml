@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: backend
+
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/escola
+    username: root
+    password: password
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
+
+minio:
+  url: http://127.0.0.1:9000
+  access-key: minioadmin
+  secret-key: minioadmin
+  bucket: faces
+
+jwt:
+    secret: unL5qjl6ghN8iR+lx4tVfOtFa3x6QwNefoLWu9nKB3FcooV7wJLaOcPilIOnMTjetPm94JWOB1BlVZ2ubVlFZQ==
+
