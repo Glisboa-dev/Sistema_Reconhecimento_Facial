@@ -28,10 +28,7 @@ public class Presence extends EntityModel {
     public Presence(Record record) {
         super();
         this.record = record;
-    }
-
-    @PrePersist
-    protected void onCreate() {
         this.createdAt = LocalDateTime.now();
     }
+
 }

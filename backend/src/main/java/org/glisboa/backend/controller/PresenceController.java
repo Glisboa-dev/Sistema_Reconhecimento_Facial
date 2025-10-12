@@ -24,14 +24,7 @@ public class PresenceController {
     private final PresenceService presenceService;
 
     @PostMapping("/register/{id}")
-    public ResponseEntity<ApiResponse> registerPresence(@PathVariable("id") Integer registerId, HttpServletRequest request) {
-        String origin = request.getHeader("Origin");
-        String referer = request.getHeader("Referer");
-
-        if ((origin != null && !origin.equals("http://127;0.0.1:5001")) &&
-                (referer != null && !referer.startsWith("http://127.0.0.1:5001"))) {
-            throw new AuthException("Origem não autorizada");
-        }
+    public ResponseEntity<ApiResponse> registerPresence(@PathVariable("id") Integer registerId) {
         presenceService.registerPresence(registerId);
         return ApiResponse.success("Presença registrada com sucesso", null, HttpStatus.CREATED);
     }

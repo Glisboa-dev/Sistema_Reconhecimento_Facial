@@ -9,12 +9,14 @@ import org.glisboa.backend.domain.specifications.presence.PresenceSpecification;
 import org.glisboa.backend.dto.request.presence.filter.SearchPresenceFilter;
 import org.glisboa.backend.dto.response.presence.PresenceResponse;
 import org.glisboa.backend.service.record.RecordService;
+import org.glisboa.backend.utils.domain.repo.RepositoryUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -26,12 +28,17 @@ public class PresenceServiceImpl implements PresenceService{
     @Transactional
     @Override
     public void registerPresence(Integer registerId) {
+        System.out.println("Registering presence for ID: " + registerId);
      var record = recordService.getRecordById(registerId);
      var newPresence = new Presence(record);
+        System.out.println("New presence created at: " + newPresence.getCreatedAt());
+        System.out.println(record.getId());
 
      registerPresenceTimeOut(record, newPresence);
+        System.out.println("Presences after timeout check: " + record.getPresences().size());
 
-     recordService.saveRecord(record);
+        RepositoryUtils.saveEntity(presenceRepo,newPresence);
+        System.out.println("Presence registered successfully.");
     }
 
     @Override
