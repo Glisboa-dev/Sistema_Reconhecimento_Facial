@@ -58,7 +58,7 @@ public class RecordServiceImpl implements RecordService{
 
     private void sendAddEmbenddingRequest(Integer id, String objectName) {
         try {
-            var url = "http://localhost:5001/add_embedding"; // or the container name if using Docker network
+            var url = "http://127.0.0.1:5001/embed"; // or the container name if using Docker network
             var restTemplate = new RestTemplate();
 
             Map<String, Object> request = new HashMap<>();

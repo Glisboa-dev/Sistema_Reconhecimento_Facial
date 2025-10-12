@@ -28,8 +28,8 @@ public class PresenceController {
         String origin = request.getHeader("Origin");
         String referer = request.getHeader("Referer");
 
-        if ((origin != null && !origin.equals("http://127;0.0.1:8081")) &&
-                (referer != null && !referer.startsWith("http://127.0.0.1:8081"))) {
+        if ((origin != null && !origin.equals("http://127;0.0.1:5001")) &&
+                (referer != null && !referer.startsWith("http://127.0.0.1:5001"))) {
             throw new AuthException("Origem não autorizada");
         }
         presenceService.registerPresence(registerId);
