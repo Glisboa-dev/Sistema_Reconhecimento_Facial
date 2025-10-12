@@ -1,4 +1,4 @@
 package org.glisboa.backend.dto.request.employee;
 
-public record AddEmployeeUserRequest(String username, String password) {
+public record AddEmployeeUserRequest(String username, String password, Integer employeeRecordId) {
 }

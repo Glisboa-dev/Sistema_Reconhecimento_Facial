@@ -64,4 +64,10 @@ public class RecordController {
         return ApiResponse.success("Registro desativado com sucesso", null, HttpStatus.OK);
 
     }
+    @PutMapping("/activate/{id}")
+    public ResponseEntity<ApiResponse> activateRecord(@PathVariable Integer id) {
+        recordService.activateRecord(id);
+        return ApiResponse.success("Registro ativado com sucesso", null, HttpStatus.OK);
+
+    }
 }

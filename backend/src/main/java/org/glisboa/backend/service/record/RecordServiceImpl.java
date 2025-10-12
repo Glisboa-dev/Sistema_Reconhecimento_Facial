@@ -106,6 +106,14 @@ public class RecordServiceImpl implements RecordService{
         saveRecord(record);
     }
 
+    @Transactional
+    @Override
+    public void activateRecord(Integer id) {
+        var record = getRecordById(id);
+        record.setStatus(Status.ATIVO);
+        saveRecord(record);
+    }
+
     @Override
     public Record getRecordById(Integer id) {
         return RepositoryUtils.findEntityByIdOrThrow(recordRepo, id);
@@ -114,5 +122,10 @@ public class RecordServiceImpl implements RecordService{
     @Override
     public void saveRecord(Record record) {
         RepositoryUtils.saveEntity(recordRepo, record);
+    }
+
+    @Override
+    public Record getRecordByEmployeeId(Integer employeeId) {
+        return recordRepo.findByEmployee_Id(employeeId);
     }
 }

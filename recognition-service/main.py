@@ -199,9 +199,8 @@ def send_register(record_id):
         traceback.print_exc()
 
 def sendAlert():
-    print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
     try:
-        url = "http://127.0.0.1:3000/alert"
+        url = "http://localhost:5174/alert"
         session.post(url, timeout=5)
         print(f"[{time.strftime('%Y-%m-%d %H:%M:%S')}] ALERT sent", flush=True)
     except Exception as e:

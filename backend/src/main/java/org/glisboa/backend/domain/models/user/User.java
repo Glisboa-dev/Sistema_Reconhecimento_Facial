@@ -17,7 +17,6 @@ import java.util.List;
 
 @Entity
 @Table(name = "USUARIO")
-@AllArgsConstructor
 @NoArgsConstructor
 @Getter @Setter
 public class User extends EntityModel implements UserDetails {
@@ -36,11 +35,12 @@ public class User extends EntityModel implements UserDetails {
     @JoinColumn(name = "id_cadastro", nullable = true)
     private Record record;
 
-    public User(String username, String encodedPassword, Role role) {
+    public User(String username, String encodedPassword, Role role, Record record) {
         super();
         this.username = username;
         this.password = encodedPassword;
         this.role = role;
+        this.record = record;
     }
 
     @Override

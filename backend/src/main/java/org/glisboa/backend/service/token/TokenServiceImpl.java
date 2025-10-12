@@ -29,6 +29,7 @@ public class TokenServiceImpl implements TokenService {
             return JWT.create()
                     .withIssuer("auth-api")
                     .withSubject(user.getUsername())
+                    .withClaim("role", user.getRole().name())
                     .withExpiresAt(Date.from(genExpDate()))
                     .sign(algorithm);
         } catch (JWTCreationException | UnsupportedEncodingException e) {
@@ -49,6 +50,21 @@ public class TokenServiceImpl implements TokenService {
             throw new AuthException("Token inválido ou expirado");
         }
     }
+
+    @Override
+    public String getTokenClaim(String token) {
+        try {
+            var algorithm = Algorithm.HMAC256(secretKey);
+            return JWT.require(algorithm)
+                    .withIssuer("auth-api")
+                    .build()
+                    .verify(token)
+                    .getClaim("role").asString();
+        } catch (Exception e) {
+            throw new AuthException("Não foi possível obter o subject do token");
+        }
+    }
+
 
 
     private Instant genExpDate() {

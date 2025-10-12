@@ -32,11 +32,9 @@ public class PresenceController {
     @GetMapping("/search")
     public ResponseEntity<ApiResponse> searchPresences(
             @RequestParam(required = false)
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
             LocalDateTime from,
 
             @RequestParam(required = false)
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
             LocalDateTime to,
 
             @RequestParam(required = false)

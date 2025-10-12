@@ -32,15 +32,16 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/auth/register/employee").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/api/records/add-employee").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/auth/register/employee").hasAnyRole("ADMIN", "DBA")
+                        .requestMatchers(HttpMethod.POST, "/api/records/add-employee").hasAnyRole("ADMIN", "DBA")
                         .requestMatchers("/api/employees/**").hasAnyRole("FUNCIONARIO", "ADMIN")
                         .requestMatchers("/api/records/**").hasAnyRole("FUNCIONARIO", "ADMIN")
-                        .requestMatchers(HttpMethod.GET,"/api/presences/search").hasAnyRole("FUNCIONARIO", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/presences/search").hasAnyRole("FUNCIONARIO", "ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/presences/register/**").permitAll()
                         .requestMatchers("/api/students/**").hasAnyRole("FUNCIONARIO", "ADMIN")
                         .anyRequest().authenticated()
@@ -50,13 +51,17 @@ public class SecurityConfig {
     }
 
     @Bean
-    CorsConfigurationSource corsConfigurationSource() {
+    public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(Arrays.asList("http://127.0.0.1:5001", "http://127.0.0.1:3000"));
+        config.setAllowedOrigins(Arrays.asList(
+                "http://127.0.0.1:5001",
+                "http://localhost:5173"
+        ));
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
         config.setMaxAge(3600L);
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
         return source;

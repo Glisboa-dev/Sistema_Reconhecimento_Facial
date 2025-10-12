@@ -6,5 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface RecordRepository extends JpaRepository<Record, Integer> {
 
   boolean existsByNameIgnoreCase(String name);
+
+    Record findByEmployee_Id(Integer employeeId);
 }
 
