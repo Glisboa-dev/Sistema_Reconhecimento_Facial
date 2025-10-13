@@ -362,10 +362,19 @@ const ManageStudents = () => {
                           type="text"
                           placeholder="Digite a matrícula"
                           value={formData.studentId || ''}
-                          onChange={(e) => setFormData({...formData, studentId: e.target.value})}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            if (value.length <= 10) {
+                              setFormData({...formData, studentId: value});
+                            }
+                          }}
                           className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          maxLength={10}
                           required
                         />
+                        <p className="text-xs text-gray-500 mt-1">
+                          {(formData.studentId || '').length}/10 caracteres
+                        </p>
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">Série</label>

@@ -5,7 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.glisboa.backend.domain.models.presence.Presence;
 import org.glisboa.backend.domain.models.record.Record;
 import org.glisboa.backend.domain.repositories.presence.PresenceRepository;
-import org.glisboa.backend.domain.specifications.presence.PresenceSpecification;
+import org.glisboa.backend.domain.specifications.presence.EmployeePresenceSpecification;
+import org.glisboa.backend.domain.specifications.presence.StudentPresenceSpecification;
 import org.glisboa.backend.dto.request.presence.filter.SearchPresenceFilter;
 import org.glisboa.backend.dto.response.presence.PresenceResponse;
 import org.glisboa.backend.service.record.RecordService;
@@ -16,7 +17,6 @@ import org.springframework.hateoas.PagedModel;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -28,14 +28,9 @@ public class PresenceServiceImpl implements PresenceService{
     @Transactional
     @Override
     public void registerPresence(Integer registerId) {
-        System.out.println("Registering presence for ID: " + registerId);
      var record = recordService.getRecordById(registerId);
      var newPresence = new Presence(record);
-        System.out.println("New presence created at: " + newPresence.getCreatedAt());
-        System.out.println(record.getId());
-
      registerPresenceTimeOut(record, newPresence);
-        System.out.println("Presences after timeout check: " + record.getPresences().size());
 
         RepositoryUtils.saveEntity(presenceRepo,newPresence);
         System.out.println("Presence registered successfully.");
@@ -43,10 +38,19 @@ public class PresenceServiceImpl implements PresenceService{
 
     @Override
     public PagedModel<PresenceResponse> searchPresences(SearchPresenceFilter searchPresenceFilter, Pageable pageable) {
-        Page<Presence> presences = presenceRepo.findAll(
-                PresenceSpecification.fromSearchPresences(searchPresenceFilter),
-                pageable
-        );
+        Page<Presence> presences;
+
+        if (searchPresenceFilter.searchStudents()) {
+            presences = presenceRepo.findAll(
+                    StudentPresenceSpecification.fromSearchPresencesForStudents(searchPresenceFilter),
+                    pageable
+            );
+        } else {
+            presences = presenceRepo.findAll(
+                    EmployeePresenceSpecification.fromSearchPresencesForEmployees(searchPresenceFilter),
+                    pageable
+            );
+        }
 
         List<PresenceResponse> dtoList = presences.stream()
                 .map(p -> new PresenceResponse(
@@ -65,6 +69,7 @@ public class PresenceServiceImpl implements PresenceService{
 
         return PagedModel.of(dtoList, metadata);
     }
+
 
     private void registerPresenceTimeOut(Record record, Presence newPresence){
         var presences = record.getPresences();

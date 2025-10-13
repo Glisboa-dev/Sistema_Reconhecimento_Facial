@@ -49,17 +49,30 @@ const Presences = () => {
       if (filters.post) cleanFilters.post = filters.post;
       cleanFilters.searchStudents = filters.searchStudents !== undefined ? filters.searchStudents : true;
 
+      console.log('=== SEARCH PRESENCES REQUEST ===');
+      console.log('Filters sent:', cleanFilters);
+
       const response = await searchPresences(cleanFilters);
+      
+      console.log('=== SEARCH PRESENCES RESPONSE ===');
+      console.log('Full response:', response);
+      console.log('Response data:', response.data);
+      
       const data = response.data;
       
       if (data && data.content && Array.isArray(data.content)) {
+        console.log('Using data.content:', data.content);
         setPresences(data.content);
       } else if (Array.isArray(data)) {
+        console.log('Using data directly:', data);
         setPresences(data);
       } else {
+        console.log('No valid data structure found');
         setPresences([]);
       }
     } catch (err) {
+      console.error('=== SEARCH PRESENCES ERROR ===');
+      console.error('Error:', err);
       setError(err.message || 'Erro ao carregar presenças');
       setPresences([]);
     } finally {
@@ -217,12 +230,6 @@ const Presences = () => {
                     <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">ID</th>
                     <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Nome</th>
                     <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Tipo</th>
-                    {searchFilters.searchStudents && (
-                      <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Série</th>
-                    )}
-                    {!searchFilters.searchStudents && (
-                      <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Cargo</th>
-                    )}
                     <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Data e Hora</th>
                     <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Status</th>
                   </tr>
@@ -239,17 +246,7 @@ const Presences = () => {
                           {searchFilters.searchStudents ? 'Aluno' : 'Funcionário'}
                         </span>
                       </td>
-                      {searchFilters.searchStudents && (
-                        <td className="px-6 py-4 text-sm text-gray-800">
-                          {presence.grade ? getGradeLabel(presence.grade) : '-'}
-                        </td>
-                      )}
-                      {!searchFilters.searchStudents && (
-                        <td className="px-6 py-4 text-sm text-gray-800">
-                          {presence.post ? getPostLabel(presence.post) : '-'}
-                        </td>
-                      )}
-                      <td className="px-6 py-4 text-sm text-gray-800">{formatDateTime(presence.timestamp)}</td>
+                      <td className="px-6 py-4 text-sm text-gray-800">{formatDateTime(presence.createdAt)}</td>
                       <td className="px-6 py-4 text-sm">
                         <span className="px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
                           Presente

@@ -1,5 +1,7 @@
+DELIMITER $$
+
 -- CADASTRO
-DROP TRIGGER IF EXISTS TRG_INSERT_CADASTRO;
+DROP TRIGGER IF EXISTS TRG_INSERT_CADASTRO $$
 CREATE TRIGGER TRG_INSERT_CADASTRO
     AFTER INSERT ON CADASTRO
     FOR EACH ROW
@@ -10,7 +12,6 @@ BEGIN
         registro_novo,
         tipo_operacao,
         registro_anterior,
-        id_presenca,
         id_cadastro
     )
     VALUES (
@@ -19,12 +20,11 @@ BEGIN
                CONCAT('NOME: ', NEW.nome, ', STATUS: ', NEW.status, ', FOTO: ', NEW.foto, ', TYPE: ', NEW.`type`),
                'INSERT',
                NULL,
-               NULL,
                NEW.id
            );
-END;
+END $$
 
-DROP TRIGGER IF EXISTS TRG_UPDATE_CADASTRO;
+DROP TRIGGER IF EXISTS TRG_UPDATE_CADASTRO $$
 CREATE TRIGGER TRG_UPDATE_CADASTRO
     AFTER UPDATE ON CADASTRO
     FOR EACH ROW
@@ -35,7 +35,6 @@ BEGIN
         registro_novo,
         tipo_operacao,
         registro_anterior,
-        id_presenca,
         id_cadastro
     )
     VALUES (
@@ -44,12 +43,11 @@ BEGIN
                CONCAT('NOME: ', NEW.nome, ', STATUS: ', NEW.status, ', FOTO: ', NEW.foto, ', TYPE: ', NEW.`type`),
                'UPDATE',
                CONCAT('NOME: ', OLD.nome, ', STATUS: ', OLD.status, ', FOTO: ', OLD.foto, ', TYPE: ', OLD.`type`),
-               NULL,
                NEW.id
            );
-END;
+END $$
 
-DROP TRIGGER IF EXISTS TRG_DELETE_CADASTRO;
+DROP TRIGGER IF EXISTS TRG_DELETE_CADASTRO $$
 CREATE TRIGGER TRG_DELETE_CADASTRO
     AFTER DELETE ON CADASTRO
     FOR EACH ROW
@@ -60,7 +58,6 @@ BEGIN
         registro_novo,
         tipo_operacao,
         registro_anterior,
-        id_presenca,
         id_cadastro
     )
     VALUES (
@@ -69,13 +66,13 @@ BEGIN
                NULL,
                'DELETE',
                CONCAT('NOME: ', OLD.nome, ', STATUS: ', OLD.status, ', FOTO: ', OLD.foto, ', TYPE: ', OLD.`type`),
-               NULL,
                OLD.id
            );
-END;
+END $$
+
 
 -- ALUNO
-DROP TRIGGER IF EXISTS TRG_INSERT_ALUNO;
+DROP TRIGGER IF EXISTS TRG_INSERT_ALUNO $$
 CREATE TRIGGER TRG_INSERT_ALUNO
     AFTER INSERT ON ALUNO
     FOR EACH ROW
@@ -86,7 +83,6 @@ BEGIN
         registro_novo,
         tipo_operacao,
         registro_anterior,
-        id_presenca,
         id_cadastro
     )
     VALUES (
@@ -95,12 +91,11 @@ BEGIN
                CONCAT('MATRICULA: ', NEW.matricula, ', SERIE: ', NEW.serie),
                'INSERT',
                NULL,
-               NULL,
                NEW.id_cadastro
            );
-END;
+END $$
 
-DROP TRIGGER IF EXISTS TRG_UPDATE_ALUNO;
+DROP TRIGGER IF EXISTS TRG_UPDATE_ALUNO $$
 CREATE TRIGGER TRG_UPDATE_ALUNO
     AFTER UPDATE ON ALUNO
     FOR EACH ROW
@@ -111,7 +106,6 @@ BEGIN
         registro_novo,
         tipo_operacao,
         registro_anterior,
-        id_presenca,
         id_cadastro
     )
     VALUES (
@@ -120,12 +114,11 @@ BEGIN
                CONCAT('MATRICULA: ', NEW.matricula, ', SERIE: ', NEW.serie),
                'UPDATE',
                CONCAT('MATRICULA: ', OLD.matricula, ', SERIE: ', OLD.serie),
-               NULL,
                NEW.id_cadastro
            );
-END;
+END $$
 
-DROP TRIGGER IF EXISTS TRG_DELETE_ALUNO;
+DROP TRIGGER IF EXISTS TRG_DELETE_ALUNO $$
 CREATE TRIGGER TRG_DELETE_ALUNO
     AFTER DELETE ON ALUNO
     FOR EACH ROW
@@ -136,7 +129,6 @@ BEGIN
         registro_novo,
         tipo_operacao,
         registro_anterior,
-        id_presenca,
         id_cadastro
     )
     VALUES (
@@ -145,13 +137,13 @@ BEGIN
                NULL,
                'DELETE',
                CONCAT('MATRICULA: ', OLD.matricula, ', SERIE: ', OLD.serie),
-               NULL,
                OLD.id_cadastro
            );
-END;
+END $$
+
 
 -- FUNCIONARIO
-DROP TRIGGER IF EXISTS TRG_INSERT_FUNCIONARIO;
+DROP TRIGGER IF EXISTS TRG_INSERT_FUNCIONARIO $$
 CREATE TRIGGER TRG_INSERT_FUNCIONARIO
     AFTER INSERT ON FUNCIONARIO
     FOR EACH ROW
@@ -162,7 +154,6 @@ BEGIN
         registro_novo,
         tipo_operacao,
         registro_anterior,
-        id_presenca,
         id_cadastro
     )
     VALUES (
@@ -171,12 +162,11 @@ BEGIN
                CONCAT('CPF: ', NEW.cpf, ', CARGO: ', NEW.cargo, ', DESCRICAO: ', NEW.descricao),
                'INSERT',
                NULL,
-               NULL,
                NEW.id_cadastro
            );
-END;
+END $$
 
-DROP TRIGGER IF EXISTS TRG_UPDATE_FUNCIONARIO;
+DROP TRIGGER IF EXISTS TRG_UPDATE_FUNCIONARIO $$
 CREATE TRIGGER TRG_UPDATE_FUNCIONARIO
     AFTER UPDATE ON FUNCIONARIO
     FOR EACH ROW
@@ -187,7 +177,6 @@ BEGIN
         registro_novo,
         tipo_operacao,
         registro_anterior,
-        id_presenca,
         id_cadastro
     )
     VALUES (
@@ -196,12 +185,11 @@ BEGIN
                CONCAT('CPF: ', NEW.cpf, ', CARGO: ', NEW.cargo, ', DESCRICAO: ', NEW.descricao),
                'UPDATE',
                CONCAT('CPF: ', OLD.cpf, ', CARGO: ', OLD.cargo, ', DESCRICAO: ', OLD.descricao),
-               NULL,
                NEW.id_cadastro
            );
-END;
+END $$
 
-DROP TRIGGER IF EXISTS TRG_DELETE_FUNCIONARIO;
+DROP TRIGGER IF EXISTS TRG_DELETE_FUNCIONARIO $$
 CREATE TRIGGER TRG_DELETE_FUNCIONARIO
     AFTER DELETE ON FUNCIONARIO
     FOR EACH ROW
@@ -212,7 +200,6 @@ BEGIN
         registro_novo,
         tipo_operacao,
         registro_anterior,
-        id_presenca,
         id_cadastro
     )
     VALUES (
@@ -221,13 +208,13 @@ BEGIN
                NULL,
                'DELETE',
                CONCAT('CPF: ', OLD.cpf, ', CARGO: ', OLD.cargo, ', DESCRICAO: ', OLD.descricao),
-               NULL,
                OLD.id_cadastro
            );
-END;
+END $$
+
 
 -- PRESENCA
-DROP TRIGGER IF EXISTS TRG_INSERT_PRESENCA;
+DROP TRIGGER IF EXISTS TRG_INSERT_PRESENCA $$
 CREATE TRIGGER TRG_INSERT_PRESENCA
     AFTER INSERT ON PRESENCA
     FOR EACH ROW
@@ -238,7 +225,6 @@ BEGIN
         registro_novo,
         tipo_operacao,
         registro_anterior,
-        id_presenca,
         id_cadastro
     )
     VALUES (
@@ -247,12 +233,11 @@ BEGIN
                CONCAT('DATA_HORA: ', NEW.data_hora),
                'INSERT',
                NULL,
-               NEW.id,
                NEW.id_cadastro
            );
-END;
+END $$
 
-DROP TRIGGER IF EXISTS TRG_UPDATE_PRESENCA;
+DROP TRIGGER IF EXISTS TRG_UPDATE_PRESENCA $$
 CREATE TRIGGER TRG_UPDATE_PRESENCA
     AFTER UPDATE ON PRESENCA
     FOR EACH ROW
@@ -263,7 +248,6 @@ BEGIN
         registro_novo,
         tipo_operacao,
         registro_anterior,
-        id_presenca,
         id_cadastro
     )
     VALUES (
@@ -272,12 +256,11 @@ BEGIN
                CONCAT('DATA_HORA: ', NEW.data_hora),
                'UPDATE',
                CONCAT('DATA_HORA: ', OLD.data_hora),
-               NEW.id,
                NEW.id_cadastro
            );
-END;
+END $$
 
-DROP TRIGGER IF EXISTS TRG_DELETE_PRESENCA;
+DROP TRIGGER IF EXISTS TRG_DELETE_PRESENCA $$
 CREATE TRIGGER TRG_DELETE_PRESENCA
     AFTER DELETE ON PRESENCA
     FOR EACH ROW
@@ -288,7 +271,6 @@ BEGIN
         registro_novo,
         tipo_operacao,
         registro_anterior,
-        id_presenca,
         id_cadastro
     )
     VALUES (
@@ -297,7 +279,8 @@ BEGIN
                NULL,
                'DELETE',
                CONCAT('DATA_HORA: ', OLD.data_hora),
-               OLD.id,
                OLD.id_cadastro
            );
-END;
+END $$
+
+DELIMITER ;

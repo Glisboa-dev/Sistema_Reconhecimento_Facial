@@ -37,10 +37,6 @@ public class Log extends EntityModel {
     @Column(name = "id_cadastro", nullable = false)
     private Integer id_record;
 
-    @ManyToOne
-    @JoinColumn(name = "id_presenca")
-    private Presence presence;
-
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();

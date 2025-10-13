@@ -13,10 +13,7 @@ const Dashboard = () => {
   useEffect(() => {
     const role = localStorage.getItem('userRole');
     setUserRole(role || '');
-    if (role === 'FUNCIONARIO' && activeTab === 'employees') {
-      setActiveTab('students');
-    }
-  }, [activeTab]);
+  }, []);
 
   const handleLogout = () => {
     localStorage.clear();

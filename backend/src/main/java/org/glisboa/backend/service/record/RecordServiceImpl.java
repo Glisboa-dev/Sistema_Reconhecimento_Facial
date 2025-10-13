@@ -85,6 +85,7 @@ public class RecordServiceImpl implements RecordService{
         var record = getRecordById(id);
         record.setName(newName);
         saveRecord(record);
+
     }
 
     @Transactional
@@ -96,6 +97,7 @@ public class RecordServiceImpl implements RecordService{
         record.setPictureUrl(newPictureUrl);
         minIOService.deleteFile(oldPictureUrl);
         saveRecord(record);
+        sendAddEmbenddingRequest(id, newPictureUrl);
     }
 
     @Transactional

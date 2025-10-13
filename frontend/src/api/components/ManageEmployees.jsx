@@ -13,7 +13,7 @@ const POSTS = [
   { value: 'MONITOR', label: 'Monitor' }
 ];
 
-const ManageEmployees = () => {
+const ManageEmployees = ({ userRole: propUserRole }) => {
   const [employees, setEmployees] = useState([]);
   const [allEmployees, setAllEmployees] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -23,12 +23,12 @@ const ManageEmployees = () => {
   const [searchFilters, setSearchFilters] = useState({});
   const [formData, setFormData] = useState({});
   const [selectedFile, setSelectedFile] = useState(null);
-  const [userRole, setUserRole] = useState('');
   const [cpfError, setCpfError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+
+  const userRole = propUserRole || localStorage.getItem('userRole') || '';
 
   useEffect(() => {
-    const role = localStorage.getItem('userRole');
-    setUserRole(role || '');
     loadEmployees();
   }, []);
 
@@ -98,6 +98,24 @@ const ManageEmployees = () => {
     setSelectedFile(null);
     setError('');
     setCpfError('');
+    setPasswordError('');
+  };
+
+  const validatePassword = (password) => {
+    if (!password) return { valid: false, message: 'Senha é obrigatória' };
+    if (password.length < 8) {
+      return { valid: false, message: 'Senha deve ter no mínimo 8 caracteres' };
+    }
+    if (!/[A-Z]/.test(password)) {
+      return { valid: false, message: 'Senha deve conter pelo menos uma letra maiúscula' };
+    }
+    if (!/[a-z]/.test(password)) {
+      return { valid: false, message: 'Senha deve conter pelo menos uma letra minúscula' };
+    }
+    if (!/[0-9]/.test(password)) {
+      return { valid: false, message: 'Senha deve conter pelo menos um número' };
+    }
+    return { valid: true, message: '' };
   };
 
   const handleSubmit = async (e) => {
@@ -105,6 +123,7 @@ const ManageEmployees = () => {
     setLoading(true);
     setError('');
     setCpfError('');
+    setPasswordError('');
 
     try {
       if (modalType === 'add') {
@@ -133,6 +152,14 @@ const ManageEmployees = () => {
           setLoading(false);
           return;
         }
+        
+        const passwordValidation = validatePassword(formData.password);
+        if (!passwordValidation.valid) {
+          setPasswordError(passwordValidation.message);
+          setLoading(false);
+          return;
+        }
+        
         const recordId = parseInt(formData.recordId, 10);
         if (isNaN(recordId)) {
           setError('ID do registro inválido');
@@ -328,7 +355,9 @@ const ManageEmployees = () => {
                     <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Cargo</th>
                     <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Descrição</th>
                     <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Status</th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Ações</th>
+                    {canManageEmployees && (
+                      <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Ações</th>
+                    )}
                   </tr>
                 </thead>
                 <tbody>
@@ -345,47 +374,45 @@ const ManageEmployees = () => {
                           {employee.status === 'ATIVO' ? 'Ativo' : 'Inativo'}
                         </span>
                       </td>
-                      <td className="px-6 py-4 text-sm">
-                        <div className="flex gap-2">
-                          <button 
-                            onClick={() => openModal('updateName', employee)} 
-                            className="text-blue-600 hover:text-blue-800 font-medium"
-                          >
-                            Editar
-                          </button>
-                          <button 
-                            onClick={() => openModal('updatePhoto', employee)} 
-                            className="text-green-600 hover:text-green-800 font-medium"
-                          >
-                            Foto
-                          </button>
-                          {canManageEmployees && (
-                            <>
-                              {employee.status === 'ATIVO' ? (
-                                <button 
-                                  onClick={() => handleDeactivate(employee.id)} 
-                                  className="text-yellow-600 hover:text-yellow-800 font-medium"
-                                >
-                                  Desativar
-                                </button>
-                              ) : (
-                                <button 
-                                  onClick={() => handleActivate(employee.id)} 
-                                  className="text-green-600 hover:text-green-800 font-medium"
-                                >
-                                  Ativar
-                                </button>
-                              )}
+                      {canManageEmployees && (
+                        <td className="px-6 py-4 text-sm">
+                          <div className="flex gap-2">
+                            <button 
+                              onClick={() => openModal('updateName', employee)} 
+                              className="text-blue-600 hover:text-blue-800 font-medium"
+                            >
+                              Editar
+                            </button>
+                            <button 
+                              onClick={() => openModal('updatePhoto', employee)} 
+                              className="text-green-600 hover:text-green-800 font-medium"
+                            >
+                              Foto
+                            </button>
+                            {employee.status === 'ATIVO' ? (
                               <button 
-                                onClick={() => handleDelete(employee.id)} 
-                                className="text-red-600 hover:text-red-800 font-medium"
+                                onClick={() => handleDeactivate(employee.id)} 
+                                className="text-yellow-600 hover:text-yellow-800 font-medium"
                               >
-                                Deletar
+                                Desativar
                               </button>
-                            </>
-                          )}
-                        </div>
-                      </td>
+                            ) : (
+                              <button 
+                                onClick={() => handleActivate(employee.id)} 
+                                className="text-green-600 hover:text-green-800 font-medium"
+                              >
+                                Ativar
+                              </button>
+                            )}
+                            <button 
+                              onClick={() => handleDelete(employee.id)} 
+                              className="text-red-600 hover:text-red-800 font-medium"
+                            >
+                              Deletar
+                            </button>
+                          </div>
+                        </td>
+                      )}
                     </tr>
                   ))}
                 </tbody>
@@ -461,10 +488,19 @@ const ManageEmployees = () => {
                         <textarea
                           placeholder="Digite a descrição (opcional)"
                           value={formData.description || ''}
-                          onChange={(e) => setFormData({...formData, description: e.target.value})}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            if (value.length <= 20) {
+                              setFormData({...formData, description: value});
+                            }
+                          }}
                           className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                           rows="3"
+                          maxLength={20}
                         />
+                        <p className="text-xs text-gray-500 mt-1">
+                          {(formData.description || '').length}/20 caracteres
+                        </p>
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">Foto</label>
@@ -523,10 +559,21 @@ const ManageEmployees = () => {
                           type="password"
                           placeholder="Digite a senha"
                           value={formData.password || ''}
-                          onChange={(e) => setFormData({...formData, password: e.target.value})}
-                          className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          onChange={(e) => {
+                            setFormData({...formData, password: e.target.value});
+                            setPasswordError('');
+                          }}
+                          className={`w-full border px-4 py-2 rounded-lg focus:outline-none focus:ring-2 ${
+                            passwordError ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'
+                          }`}
                           required
                         />
+                        {passwordError && (
+                          <p className="text-red-500 text-xs mt-1">{passwordError}</p>
+                        )}
+                        <p className="text-xs text-gray-500 mt-1">
+                          Mínimo 8 caracteres, deve conter: maiúscula, minúscula e número
+                        </p>
                       </div>
                     </>
                   )}
