@@ -19,7 +19,7 @@ from urllib3.util.retry import Retry
 
 GALLERY_FILE = "deepface_gallery.pkl"
 BUCKET_NAME = "faces"
-THRESHOLD = 0.50
+THRESHOLD = 0.60
 HOST = "127.0.0.1"
 PORT = 5001
 RECOGNITION_CONFIRMATION_TIME = 0.7

@@ -123,63 +123,81 @@ const Presences = () => {
 
           <div className="bg-gray-50 p-4 rounded-lg mb-6">
             <div className="grid grid-cols-1 md:grid-cols-5 gap-3 mb-3">
-              <input
-                type="date"
-                value={searchFilters.from || ''}
-                onChange={(e) => setSearchFilters({...searchFilters, from: e.target.value})}
-                className="border border-gray-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Data Início"
-              />
-              <input
-                type="date"
-                value={searchFilters.to || ''}
-                onChange={(e) => setSearchFilters({...searchFilters, to: e.target.value})}
-                className="border border-gray-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Data Fim"
-              />
-              <input
-                type="text"
-                placeholder="Nome"
-                value={searchFilters.name || ''}
-                onChange={(e) => setSearchFilters({...searchFilters, name: e.target.value})}
-                className="border border-gray-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
+              <div>
+                <label className="block text-xs font-medium text-gray-600 mb-1">De</label>
+                <input
+                  type="date"
+                  value={searchFilters.from || ''}
+                  onChange={(e) => setSearchFilters({...searchFilters, from: e.target.value})}
+                  className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Data Início"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-gray-600 mb-1">Até</label>
+                <input
+                  type="date"
+                  value={searchFilters.to || ''}
+                  onChange={(e) => setSearchFilters({...searchFilters, to: e.target.value})}
+                  className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Data Fim"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-gray-600 mb-1">Nome</label>
+                <input
+                  type="text"
+                  placeholder="Digite o nome"
+                  value={searchFilters.name || ''}
+                  onChange={(e) => setSearchFilters({...searchFilters, name: e.target.value})}
+                  className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
               {searchFilters.searchStudents ? (
-                <select
-                  value={searchFilters.grade || ''}
-                  onChange={(e) => setSearchFilters({...searchFilters, grade: e.target.value})}
-                  className="border border-gray-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="">Todas as Séries</option>
-                  {GRADES.map(grade => (
-                    <option key={grade.value} value={grade.value}>{grade.label}</option>
-                  ))}
-                </select>
+                <div>
+                  <label className="block text-xs font-medium text-gray-600 mb-1">Série</label>
+                  <select
+                    value={searchFilters.grade || ''}
+                    onChange={(e) => setSearchFilters({...searchFilters, grade: e.target.value})}
+                    className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="">Todas as Séries</option>
+                    {GRADES.map(grade => (
+                      <option key={grade.value} value={grade.value}>{grade.label}</option>
+                    ))}
+                  </select>
+                </div>
               ) : (
-                <select
-                  value={searchFilters.post || ''}
-                  onChange={(e) => setSearchFilters({...searchFilters, post: e.target.value})}
-                  className="border border-gray-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="">Todos os Cargos</option>
-                  {POSTS.map(post => (
-                    <option key={post.value} value={post.value}>{post.label}</option>
-                  ))}
-                </select>
+                <div>
+                  <label className="block text-xs font-medium text-gray-600 mb-1">Cargo</label>
+                  <select
+                    value={searchFilters.post || ''}
+                    onChange={(e) => setSearchFilters({...searchFilters, post: e.target.value})}
+                    className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="">Todos os Cargos</option>
+                    {POSTS.map(post => (
+                      <option key={post.value} value={post.value}>{post.label}</option>
+                    ))}
+                  </select>
+                </div>
               )}
-              <div className="flex gap-2">
-                <button 
-                  onClick={handleSearch} 
-                  className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium"
-                >
-                  Buscar
-                </button>
-                <button 
-                  onClick={handleClearFilters} 
-                  className="bg-gray-400 text-white px-4 py-2 rounded-lg hover:bg-gray-500 transition-colors"
-                >
-                  Limpar
-                </button>
+              <div>
+                <label className="block text-xs font-medium text-gray-600 mb-1">&nbsp;</label>
+                <div className="flex gap-2">
+                  <button 
+                    onClick={handleSearch} 
+                    className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                  >
+                    Buscar
+                  </button>
+                  <button 
+                    onClick={handleClearFilters} 
+                    className="bg-gray-400 text-white px-4 py-2 rounded-lg hover:bg-gray-500 transition-colors"
+                  >
+                    Limpar
+                  </button>
+                </div>
               </div>
             </div>
             <div className="flex items-center gap-4 mt-3">

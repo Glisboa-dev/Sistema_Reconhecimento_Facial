@@ -46,7 +46,7 @@ public class StudentServiceImpl implements StudentService{
 
         List<StudentResponse> dtoList = students.stream()
                 .map(s -> new StudentResponse(
-                        s.getId(),
+                        s.getRecord().getId(),
                         s.getRecord().getName(),
                         s.getStudentId(),
                         s.getGrade(),

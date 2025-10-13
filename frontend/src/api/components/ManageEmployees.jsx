@@ -25,12 +25,20 @@ const ManageEmployees = ({ userRole: propUserRole }) => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [cpfError, setCpfError] = useState('');
   const [passwordError, setPasswordError] = useState('');
+  const [notification, setNotification] = useState({ show: false, type: '', message: '' });
 
   const userRole = propUserRole || localStorage.getItem('userRole') || '';
 
   useEffect(() => {
     loadEmployees();
   }, []);
+
+  const showNotification = (type, message) => {
+    setNotification({ show: true, type, message });
+    setTimeout(() => {
+      setNotification({ show: false, type: '', message: '' });
+    }, 4000); // Auto-dismiss after 4 seconds
+  };
 
   const loadEmployees = async (filters = {}) => {
     setLoading(true);
@@ -146,6 +154,7 @@ const ManageEmployees = ({ userRole: propUserRole }) => {
           { cpf: cleanCPF, post: formData.post, description: formData.description || '' },
           selectedFile
         );
+        showNotification('success', '✓ Funcionário adicionado com sucesso!');
       } else if (modalType === 'register') {
         if (!formData.username || !formData.password || !formData.recordId) {
           setError('Por favor, preencha todos os campos');
@@ -168,6 +177,7 @@ const ManageEmployees = ({ userRole: propUserRole }) => {
         }
         console.log('Registering employee with ID:', recordId);
         await registerEmployee(formData.username, formData.password, recordId);
+        showNotification('success', '✓ Usuário registrado com sucesso!');
       } else if (modalType === 'updateName') {
         if (!formData.newName) {
           setError('Por favor, informe o novo nome');
@@ -175,6 +185,7 @@ const ManageEmployees = ({ userRole: propUserRole }) => {
           return;
         }
         await updateRecordName(formData.id, formData.newName);
+        showNotification('success', '✓ Nome do funcionário atualizado com sucesso!');
       } else if (modalType === 'updatePhoto') {
         if (!selectedFile) {
           setError('Por favor, selecione uma foto');
@@ -182,11 +193,14 @@ const ManageEmployees = ({ userRole: propUserRole }) => {
           return;
         }
         await updateRecordPhoto(formData.id, selectedFile);
+        showNotification('success', '✓ Foto do funcionário atualizada com sucesso!');
       }
       closeModal();
       loadEmployees(searchFilters);
     } catch (err) {
-      setError(err.message || 'Erro ao processar operação');
+      const errorMsg = err.message || 'Erro ao processar operação';
+      setError(errorMsg);
+      showNotification('error', '✗ ' + errorMsg);
     } finally {
       setLoading(false);
     }
@@ -199,9 +213,12 @@ const ManageEmployees = ({ userRole: propUserRole }) => {
     setError('');
     try {
       await deleteRecordById(id);
+      showNotification('success', '✓ Registro deletado com sucesso!');
       loadEmployees(searchFilters);
     } catch (err) {
-      setError(err.message || 'Erro ao deletar registro');
+      const errorMsg = err.message || 'Erro ao deletar registro';
+      setError(errorMsg);
+      showNotification('error', '✗ ' + errorMsg);
     } finally {
       setLoading(false);
     }
@@ -214,9 +231,12 @@ const ManageEmployees = ({ userRole: propUserRole }) => {
     setError('');
     try {
       await deactivateRecord(id);
+      showNotification('success', '✓ Registro desativado com sucesso!');
       loadEmployees(searchFilters);
     } catch (err) {
-      setError(err.message || 'Erro ao desativar registro');
+      const errorMsg = err.message || 'Erro ao desativar registro';
+      setError(errorMsg);
+      showNotification('error', '✗ ' + errorMsg);
     } finally {
       setLoading(false);
     }
@@ -229,9 +249,12 @@ const ManageEmployees = ({ userRole: propUserRole }) => {
     setError('');
     try {
       await activateRecord(id);
+      showNotification('success', '✓ Registro ativado com sucesso!');
       loadEmployees(searchFilters);
     } catch (err) {
-      setError(err.message || 'Erro ao ativar registro');
+      const errorMsg = err.message || 'Erro ao ativar registro';
+      setError(errorMsg);
+      showNotification('error', '✗ ' + errorMsg);
     } finally {
       setLoading(false);
     }
@@ -255,6 +278,25 @@ const ManageEmployees = ({ userRole: propUserRole }) => {
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
+      {/* Notification Toast */}
+      {notification.show && (
+        <div className={`fixed top-4 right-4 z-50 px-6 py-4 rounded-lg shadow-lg transform transition-all duration-300 animate-slide-in ${
+          notification.type === 'success' 
+            ? 'bg-green-500 text-white' 
+            : 'bg-red-500 text-white'
+        }`}>
+          <div className="flex items-center gap-3">
+            <span className="text-lg font-semibold">{notification.message}</span>
+            <button 
+              onClick={() => setNotification({ show: false, type: '', message: '' })}
+              className="text-white hover:text-gray-200 font-bold text-xl"
+            >
+              ×
+            </button>
+          </div>
+        </div>
+      )}
+
       <div className="max-w-7xl mx-auto">
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex justify-between items-center mb-6">
@@ -361,60 +403,73 @@ const ManageEmployees = ({ userRole: propUserRole }) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {employees.map((employee) => (
-                    <tr key={employee.id} className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
-                      <td className="px-6 py-4 text-sm text-gray-800">{formatCPF(employee.cpf)}</td>
-                      <td className="px-6 py-4 text-sm text-gray-800">{employee.name}</td>
-                      <td className="px-6 py-4 text-sm text-gray-800">{getPostLabel(employee.post)}</td>
-                      <td className="px-6 py-4 text-sm text-gray-800">{employee.description || '-'}</td>
-                      <td className="px-6 py-4 text-sm">
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                          employee.status === 'ATIVO' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                        }`}>
-                          {employee.status === 'ATIVO' ? 'Ativo' : 'Inativo'}
-                        </span>
-                      </td>
-                      {canManageEmployees && (
+                  {employees.map((employee) => {
+                    const employeeIdValue = employee.id;
+                    
+                    return (
+                      <tr key={employee.id} className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
+                        <td className="px-6 py-4 text-sm text-gray-800">{formatCPF(employee.cpf)}</td>
+                        <td className="px-6 py-4 text-sm text-gray-800">{employee.name}</td>
+                        <td className="px-6 py-4 text-sm text-gray-800">{getPostLabel(employee.post)}</td>
+                        <td className="px-6 py-4 text-sm text-gray-800">{employee.description || '-'}</td>
                         <td className="px-6 py-4 text-sm">
-                          <div className="flex gap-2">
-                            <button 
-                              onClick={() => openModal('updateName', employee)} 
-                              className="text-blue-600 hover:text-blue-800 font-medium"
-                            >
-                              Editar
-                            </button>
-                            <button 
-                              onClick={() => openModal('updatePhoto', employee)} 
-                              className="text-green-600 hover:text-green-800 font-medium"
-                            >
-                              Foto
-                            </button>
-                            {employee.status === 'ATIVO' ? (
+                          <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                            employee.status === 'ATIVO' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                          }`}>
+                            {employee.status === 'ATIVO' ? 'Ativo' : 'Inativo'}
+                          </span>
+                        </td>
+                        {canManageEmployees && (
+                          <td className="px-6 py-4 text-sm">
+                            <div className="flex gap-2">
                               <button 
-                                onClick={() => handleDeactivate(employee.id)} 
-                                className="text-yellow-600 hover:text-yellow-800 font-medium"
+                                onClick={() => openModal('updateName', employee)} 
+                                className="text-blue-600 hover:text-blue-800 font-medium"
                               >
-                                Desativar
+                                Editar
                               </button>
-                            ) : (
                               <button 
-                                onClick={() => handleActivate(employee.id)} 
+                                onClick={() => openModal('updatePhoto', employee)} 
                                 className="text-green-600 hover:text-green-800 font-medium"
                               >
-                                Ativar
+                                Foto
                               </button>
-                            )}
-                            <button 
-                              onClick={() => handleDelete(employee.id)} 
-                              className="text-red-600 hover:text-red-800 font-medium"
-                            >
-                              Deletar
-                            </button>
-                          </div>
-                        </td>
-                      )}
-                    </tr>
-                  ))}
+                              {employee.status === 'ATIVO' ? (
+                                <button 
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    handleDeactivate(employeeIdValue);
+                                  }} 
+                                  className="text-yellow-600 hover:text-yellow-800 font-medium"
+                                >
+                                  Desativar
+                                </button>
+                              ) : (
+                                <button 
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    handleActivate(employeeIdValue);
+                                  }} 
+                                  className="text-green-600 hover:text-green-800 font-medium"
+                                >
+                                  Ativar
+                                </button>
+                              )}
+                              <button 
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  handleDelete(employeeIdValue);
+                                }} 
+                                className="text-red-600 hover:text-red-800 font-medium"
+                              >
+                                Deletar
+                              </button>
+                            </div>
+                          </td>
+                        )}
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
@@ -504,13 +559,30 @@ const ManageEmployees = ({ userRole: propUserRole }) => {
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">Foto</label>
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={(e) => setSelectedFile(e.target.files[0])}
-                          className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          required
-                        />
+                        <div className="relative">
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => setSelectedFile(e.target.files[0])}
+                            className="hidden"
+                            id="file-upload-add-employee"
+                            required
+                          />
+                          <label
+                            htmlFor="file-upload-add-employee"
+                            className="flex items-center justify-center w-full border-2 border-dashed border-gray-300 px-4 py-3 rounded-lg cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-colors"
+                          >
+                            <div className="text-center">
+                              <svg className="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                                <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                              </svg>
+                              <p className="mt-2 text-sm text-gray-600">
+                                {selectedFile ? selectedFile.name : 'Clique para selecionar uma foto'}
+                              </p>
+                              <p className="text-xs text-gray-500 mt-1">PNG, JPG, JPEG até 10MB</p>
+                            </div>
+                          </label>
+                        </div>
                       </div>
                     </>
                   )}
@@ -595,13 +667,30 @@ const ManageEmployees = ({ userRole: propUserRole }) => {
                   {modalType === 'updatePhoto' && (
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">Nova Foto</label>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) => setSelectedFile(e.target.files[0])}
-                        className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        required
-                      />
+                      <div className="relative">
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => setSelectedFile(e.target.files[0])}
+                          className="hidden"
+                          id="file-upload-update-employee"
+                          required
+                        />
+                        <label
+                          htmlFor="file-upload-update-employee"
+                          className="flex items-center justify-center w-full border-2 border-dashed border-gray-300 px-4 py-3 rounded-lg cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-colors"
+                        >
+                          <div className="text-center">
+                            <svg className="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                              <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                            <p className="mt-2 text-sm text-gray-600">
+                              {selectedFile ? selectedFile.name : 'Clique para selecionar uma nova foto'}
+                            </p>
+                            <p className="text-xs text-gray-500 mt-1">PNG, JPG, JPEG até 10MB</p>
+                          </div>
+                        </label>
+                      </div>
                     </div>
                   )}
 

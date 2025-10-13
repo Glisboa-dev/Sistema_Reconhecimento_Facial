@@ -45,6 +45,7 @@ public class AuthServiceImpl implements AuthService {
         if(userRepo.existsByUsername(userRequest.username())) throw new EntityExistsException("Este nome de usuário já existe");
         String encodedPassword = new BCryptPasswordEncoder().encode(userRequest.password());
         var record = recordService.getRecordByEmployeeId(userRequest.employeeRecordId());
+        if(record.getUser() != null) throw new EntityExistsException("Este funcionário já possui um usuário associado");
         RepositoryUtils.saveEntity(userRepo, new User(userRequest.username(), encodedPassword, Role.FUNCIONARIO, record));
     }
 }

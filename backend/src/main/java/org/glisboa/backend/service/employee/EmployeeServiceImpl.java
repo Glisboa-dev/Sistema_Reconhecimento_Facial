@@ -41,7 +41,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         var dtoList = employees.stream()
                 .map(e -> new EmployeeResponse(
-                        e.getId(),
+                        e.getRecord().getId(),
                         e.getRecord().getName(),
                         e.getPost(),
                         e.getDescription(),
